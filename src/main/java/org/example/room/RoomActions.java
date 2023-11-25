@@ -35,7 +35,7 @@ public class RoomActions {
     return room;
   }
 
-  public static void newRoom (ArrayList<Room> rooms, String name) {
+  public static void newRoom(ArrayList<Room> rooms, String name) {
     Room room = new Room(name);
     rooms.add(room);
     System.out.println("\nАудитория успешно создана\n");

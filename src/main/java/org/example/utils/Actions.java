@@ -44,7 +44,7 @@ public class Actions {
   }
 
   public static synchronized void reservation(
-          User user, Room room, LocalDateTime start, LocalDateTime finish) {
+      User user, Room room, LocalDateTime start, LocalDateTime finish) {
     if (start.getYear() != 2023 || finish.getYear() != 2023) {
       System.out.println("\nГод начала и окончания бронирования должен быть 2023\n");
       return;
