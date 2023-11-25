@@ -6,11 +6,11 @@
 
 ### 1. User
 
-Класс, который создаёт Юзера. У каждого Юзера есть 3 параметра: ID (id), имя (name), список его бронирований (informationList).
+Класс, который создаёт Юзера. У каждого Юзера есть 2 параметра: ID (id), имя (name).
 
 ### 2. Room
 
-Класс, который создаёт Комнату. У каждой Комнаты есть 5 параметров: ID (id), имя (name), список его бронирований (informationList), startInterval и finishInterval (время начала и окончания разрешённого для бронирования интервала).
+Класс, который создаёт Комнату. У каждой Комнаты есть 4 параметра: ID (id), имя (name), startInterval и finishInterval (время начала и окончания разрешённого для бронирования интервала).
 
 ### 3. UserActions
 
@@ -39,13 +39,9 @@
 - `stringToTime` – переводит тип "Строка" в тип "Дата";
 - `deleteReservation` – удаляет бронирование.
 
-### 6. InformationAboutReservationUser
+### 6. InformationAboutReservation
 
-Класс хранит параметры для получения информации о конкретном бронировании Юзера: ID Комнаты (idRoom), время начала и окончания бронирования (dateTimeStartReservation и dateTimeFinishReservation соответственно).
-
-### 7. InformationAboutReservationRoom
-
-Класс хранит параметры для получения информации о конкретном бронировании Комнаты: ID Юзера (idUser), время начала и окончания бронирования (dateTimeStartReservation и dateTimeFinishReservation соответственно).
+Класс хранит параметры для получения информации о конкретном бронировании: ID данного бронирования, ID Юзера (idUser), ID Комнаты (idRoom), время начала и окончания бронирования (dateTimeStartReservation и dateTimeFinishReservation соответственно).
 
 ## Примечания
 
