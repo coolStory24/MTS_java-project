@@ -1,32 +1,40 @@
 package org.example.utils;
 
-import org.example.room.InformationAboutReservationRoom;
 import org.example.room.Room;
 import org.example.room.RoomActions;
-import org.example.user.InformationAboutReservationUser;
 import org.example.user.User;
 import org.example.user.UserActions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalDate.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Actions {
+  public static ArrayList<InformationAboutReservation> list = new ArrayList<>();
+
   private static long countMinutes(LocalDateTime time) {
-    int[] countDaysInEveryMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int countDays = 0;
-    for (int i = 0; i < time.getMonthValue() - 1; i++) {
-      countDays += countDaysInEveryMonth[i];
+    for (int i = 1; i < time.getMonthValue(); i++) {
+      countDays += LocalDate.of(time.getYear(), i, time.getDayOfMonth()).lengthOfMonth();
     }
     countDays += time.getDayOfMonth() - 1;
-    return countDays * 1440 + time.getHour() * 60 + time.getMinute();
+    return countDays * TimeUnit.DAYS.toMinutes(1)
+        + time.getHour() * TimeUnit.HOURS.toMinutes(1)
+        + time.getMinute();
   }
 
   private static boolean check(Room room, LocalDateTime start, LocalDateTime finish) {
     long startMinutes = countMinutes(start);
     long finishMinutes = countMinutes(finish);
-    for (int i = 0; i < room.informationList.size(); i++) {
-      long startInList = countMinutes(room.informationList.get(i).dateTimeStartReservation);
-      long finishInList = countMinutes(room.informationList.get(i).dateTimeFinishReservation);
+    for (int i = 0; i < list.size(); i++) {
+      if (list.get(i).idRoom != room.id) {
+        continue;
+      }
+      long startInList = countMinutes(list.get(i).dateTimeStartReservation);
+      long finishInList = countMinutes(list.get(i).dateTimeFinishReservation);
       if (startMinutes < startInList && startInList < finishMinutes) {
         return false;
       }
@@ -45,7 +53,11 @@ public class Actions {
 
   public static synchronized void reservation(
       User user, Room room, LocalDateTime start, LocalDateTime finish) {
-    if (start.getYear() != 2023 || finish.getYear() != 2023) {
+    if (start.isBefore(LocalDateTime.now())) {
+      System.out.println("Выберите время начала бронирования в будущем");
+    }
+    if ((start.getYear() < 2023 || finish.getYear() < 2023)
+        || (start.getYear() > 2024 || finish.getYear() > 2024)) {
       System.out.println("\nГод начала и окончания бронирования должен быть 2023\n");
       return;
     }
@@ -63,18 +75,9 @@ public class Actions {
           "\nПроизошло пересечение по бронированиям. Попробуйте ввести другое время\n");
       return;
     }
-    InformationAboutReservationRoom newInfRoom = new InformationAboutReservationRoom();
-    newInfRoom.idUser = user.id;
-    newInfRoom.dateTimeStartReservation = start;
-    newInfRoom.dateTimeFinishReservation = finish;
-    room.informationList.add(newInfRoom);
-
-    InformationAboutReservationUser newInfUser = new InformationAboutReservationUser();
-    newInfUser.idRoom = room.id;
-    newInfUser.dateTimeStartReservation = start;
-    newInfUser.dateTimeFinishReservation = finish;
-    user.informationList.add(newInfUser);
-    System.out.println("\nБронирование успешно создано\n");
+    InformationAboutReservation newInf =
+        new InformationAboutReservation(user.id, room.id, start, finish);
+    list.add(newInf);
   }
 
   public static LocalDateTime stringToTime(String str) {

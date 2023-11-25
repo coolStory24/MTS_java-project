@@ -1,15 +1,18 @@
 package org.example.user;
 
 import org.example.room.Room;
+import org.example.utils.Actions;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class UserActions {
-  private static long id = 0;
+  private static AtomicLong id;
 
-  public static long generateID() {
-    return ++id;
+  public static AtomicLong generateID() {
+    id.incrementAndGet();
+    return id;
   }
 
   public static User findUsers(ArrayList<User> users, String name) {
@@ -29,13 +32,14 @@ public class UserActions {
   }
 
   public static void delete(User user, Room room, LocalDateTime start, LocalDateTime finish) {
-    for (int i = 0; i < user.informationList.size(); i++) {
-      if (user.informationList.get(i).idRoom == room.id
-          && user.informationList.get(i).dateTimeStartReservation.equals(start)
-          && user.informationList.get(i).dateTimeFinishReservation.equals(finish)) {
-        user.informationList.get(i).idRoom = -1;
-        user.informationList.get(i).dateTimeStartReservation = null;
-        user.informationList.get(i).dateTimeFinishReservation = null;
+    for (int i = 0; i < Actions.list.size(); i++) {
+      if (Actions.list.get(i).idUser != user.id) continue;
+      if (Actions.list.get(i).idRoom == room.id
+          && Actions.list.get(i).dateTimeStartReservation.equals(start)
+          && Actions.list.get(i).dateTimeFinishReservation.equals(finish)) {
+        Actions.list.get(i).idRoom = null;
+        Actions.list.get(i).dateTimeStartReservation = null;
+        Actions.list.get(i).dateTimeFinishReservation = null;
       }
     }
   }

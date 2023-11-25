@@ -2,15 +2,13 @@ package org.example.room;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Room {
-  public long id;
+  public AtomicLong id;
   public String name;
   public LocalDateTime startInterval;
   public LocalDateTime finishInterval;
-
-  public ArrayList<InformationAboutReservationRoom> informationList = new ArrayList<>();
 
   public Room(String name) {
     this.id = RoomActions.generateID();

@@ -1,16 +1,13 @@
 package org.example.user;
 
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
-  public long id;
+  public AtomicLong id;
   public String name;
-
-  public ArrayList<InformationAboutReservationUser> informationList = new ArrayList<>();
 
   public User(String name) {
     this.id = UserActions.generateID();
     this.name = name;
-    this.informationList = informationList;
   }
 }

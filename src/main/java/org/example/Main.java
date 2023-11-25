@@ -43,7 +43,7 @@ public class Main {
         }
         if (update.equals("интервал")) {
           System.out.print(
-              "Введите имя аудитории и границы нового интервала в формате yyyy-MM-dd HH:mm: ");
+              "Введите имя аудитории и границы нового интервала в формате " + "yyyy-MM-dd HH:mm: ");
           String nameRoom = input.next();
           String newStartInterval = input.next();
           String newFinishInterval = input.next();
@@ -55,7 +55,8 @@ public class Main {
         }
       } else if (requestNumber.equals("4")) {
         System.out.print(
-            "Введите имя пользователя, название аудитории и границы бронирования в формате yyyy-MM-dd HH:mm: ");
+            "Введите имя пользователя, название аудитории и границы "
+                + "бронирования в формате yyyy-MM-dd HH:mm: ");
         String nameUser = input.next();
         String nameRoom = input.next();
         String timeStart = input.next();
