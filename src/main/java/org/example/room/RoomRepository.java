@@ -5,7 +5,8 @@ public interface RoomRepository {
 
   RoomEntity getById(long id) throws RoomExceptions.RoomDatabaseException;
 
-  long create(String title, String start, String end) throws RoomExceptions.RoomDatabaseException;
+  long create(String title, String start, String end)
+    throws RoomExceptions.RoomDatabaseException;
 
   void delete(long id);
 
