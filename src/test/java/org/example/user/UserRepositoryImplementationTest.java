@@ -43,7 +43,7 @@ class UserRepositoryImplementationTest {
 
     long userId = repository.create("John Doe");
 
-    UserEntity user = repository.getById(userId);
+    UserRepository.UserEntity user = repository.getById(userId);
     assertEquals("John Doe", user.name());
     assertEquals(userId, user.id());
   }
@@ -73,7 +73,7 @@ class UserRepositoryImplementationTest {
 
     repository.update(userId, "UpdatedUser");
 
-    UserEntity updatedUser = repository.getById(userId);
+    UserRepository.UserEntity updatedUser = repository.getById(userId);
 
     assertEquals("UpdatedUser", updatedUser.name());
     assertEquals(userId, updatedUser.id());
@@ -88,7 +88,7 @@ class UserRepositoryImplementationTest {
 
     assertNotNull(repository.getById(userId));
 
-    UserEntity foundUser = repository.getById(userId);
+    UserRepository.UserEntity foundUser = repository.getById(userId);
 
     assertEquals("UserToFind", foundUser.name());
     assertEquals(userId, foundUser.id());

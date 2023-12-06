@@ -42,7 +42,7 @@ class RoomRepositoryImplementationTest {
 
     long orgId = repository.create("Room 1", "10:00:00", "22:00:00");
 
-    RoomEntity room = repository.getById(orgId);
+    RoomRepository.RoomEntity room = repository.getById(orgId);
     assertEquals("Room 1", room.title());
     assertEquals("10:00:00", room.startInterval());
     assertEquals("22:00:00", room.endInterval());
@@ -61,7 +61,7 @@ class RoomRepositoryImplementationTest {
 
     repository.update(roomId, "UpdatedRoom", "07:00:00", "16:00:00");
 
-    RoomEntity updatedRoom = repository.getById(roomId);
+    RoomRepository.RoomEntity updatedRoom = repository.getById(roomId);
 
     assertEquals("UpdatedRoom", updatedRoom.title());
     assertEquals("07:00:00", updatedRoom.startInterval());
