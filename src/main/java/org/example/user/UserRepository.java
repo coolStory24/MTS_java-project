@@ -1,13 +1,11 @@
 package org.example.user;
 
 public interface UserRepository {
-  public interface RoomRepository {
-    public User getById(long id);
+  UserEntity getById(long id) throws UserExceptions.UserDatabaseException;
 
-    public long create(User user);
+  long create(String name) throws UserExceptions.UserDatabaseException;
 
-    public void delete(long id);
+  void delete(long id) throws UserExceptions.UserDatabaseException;
 
-    public void update(long id);
-  }
+  void update(long id, String name) throws UserExceptions.UserDatabaseException;
 }

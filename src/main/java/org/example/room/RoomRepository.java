@@ -1,11 +1,11 @@
 package org.example.room;
 
 public interface RoomRepository {
-  public Room getById(long id);
+  RoomEntity getById(long id) throws RoomExceptions.RoomDatabaseException;
 
-  public long create(Room room);
+  long create(String title, String start, String end) throws RoomExceptions.RoomDatabaseException;
 
-  public void delete(long id);
+  void delete(long id);
 
-  public void update(long id);
+  void update(long id, String title, String start, String end) throws RoomExceptions.RoomDatabaseException;
 }
