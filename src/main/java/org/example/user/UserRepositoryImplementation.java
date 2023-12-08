@@ -39,8 +39,8 @@ public class UserRepositoryImplementation implements UserRepository {
           (Handle handle) -> {
             ResultBearing resultBearing =
                 handle
-                    .createUpdate("INSERT INTO \"user\" (name) " + "VALUES (:nameUser)")
-                    .bind("nameUser", name)
+                    .createUpdate("INSERT INTO \"user\" (name) " + "VALUES (:name)")
+                    .bind("name", name)
                     .executeAndReturnGeneratedKeys("id");
             Map<String, Object> mapResult = resultBearing.mapToMap().first();
             return ((Long) mapResult.get("id"));
@@ -68,14 +68,17 @@ public class UserRepositoryImplementation implements UserRepository {
   @Override
   public void update(long id, String name) throws UserExceptions.UserDatabaseException {
     try {
-      jdbi.useTransaction(
+      var rowsAffected = jdbi.inTransaction(
           (Handle handle) -> {
-            handle
+            return handle
                 .createUpdate("UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
                 .bind("id", id)
                 .bind("nameUser", name)
                 .execute();
           });
+      if (rowsAffected == 0){
+        throw new UserExceptions.UserDatabaseException("Cannot update user");
+      }
     } catch (Exception e) {
       throw new UserExceptions.UserDatabaseException("Cannot update user", e);
     }

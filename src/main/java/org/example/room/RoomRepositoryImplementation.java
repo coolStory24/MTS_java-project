@@ -80,9 +80,9 @@ public class RoomRepositoryImplementation implements RoomRepository {
   public void update(long id, String title, String start, String end)
       throws RoomExceptions.RoomDatabaseException {
     try {
-      jdbi.useTransaction(
+      var rowsAffected = jdbi.inTransaction(
           (Handle handle) -> {
-            handle
+            return handle
                 .createUpdate(
                     "UPDATE room SET title = :title, start_interval = :start, end_interval = :end WHERE id = :id ")
                 .bind("id", id)
@@ -91,6 +91,9 @@ public class RoomRepositoryImplementation implements RoomRepository {
                 .bind("end", LocalTime.parse(end))
                 .execute();
           });
+      if (rowsAffected == 0){
+        throw new RoomExceptions.RoomDatabaseException("Cannot update room");
+      }
     } catch (Exception e) {
       throw new RoomExceptions.RoomDatabaseException("Cannot update room", e);
     }
