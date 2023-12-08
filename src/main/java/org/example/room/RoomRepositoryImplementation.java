@@ -63,15 +63,16 @@ public class RoomRepositoryImplementation implements RoomRepository {
 
   @Override
   public void delete(long id) throws RoomExceptions.RoomDatabaseException {
-    try {
-      if (getById(id) != null) {
-        jdbi.useTransaction(
+    var rowsAffected =
+        jdbi.inTransaction(
             (Handle handle) -> {
-              handle.createUpdate("DELETE FROM room WHERE id = :id").bind("id", id).execute();
+              return handle
+                  .createUpdate("DELETE FROM room WHERE id = :id")
+                  .bind("id", id)
+                  .execute();
             });
-      }
-    } catch (Exception e) {
-      throw new RoomExceptions.RoomDatabaseException("Cannot delete room", e);
+    if (rowsAffected == 0) {
+      throw new RoomExceptions.RoomDatabaseException("Cannot delete room");
     }
   }
 

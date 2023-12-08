@@ -52,15 +52,16 @@ public class UserRepositoryImplementation implements UserRepository {
 
   @Override
   public void delete(long id) throws UserExceptions.UserDatabaseException {
-    try {
-      if (getById(id) != null) {
-        jdbi.useTransaction(
+    var countChange =
+        jdbi.inTransaction(
             (Handle handle) -> {
-              handle.createUpdate("DELETE FROM \"user\" WHERE id = :id").bind("id", id).execute();
+              return handle
+                  .createUpdate("DELETE FROM \"user\" WHERE id = :id")
+                  .bind("id", id)
+                  .execute();
             });
-      }
-    } catch (Exception e) {
-      throw new UserExceptions.UserDatabaseException("Cannot delete user", e);
+    if (countChange == 0) {
+      throw new UserExceptions.UserDatabaseException("Cannot delete user");
     }
   }
 
