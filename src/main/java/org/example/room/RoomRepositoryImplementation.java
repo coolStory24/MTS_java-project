@@ -63,12 +63,35 @@ public class RoomRepositoryImplementation implements RoomRepository {
 
   @Override
   public void delete(long id) throws RoomExceptions.RoomDatabaseException {
-    // TODO: 12/6/23 delete method
+    try {
+      if (getById(id) != null) {
+        jdbi.useTransaction(
+            (Handle handle) -> {
+              handle.createUpdate("DELETE FROM room WHERE id = :id").bind("id", id).execute();
+            });
+      }
+    } catch (Exception e) {
+      throw new RoomExceptions.RoomDatabaseException("Cannot delete room", e);
+    }
   }
 
   @Override
   public void update(long id, String title, String start, String end)
       throws RoomExceptions.RoomDatabaseException {
-    // TODO: 12/6/23 update method
+    try {
+      jdbi.useTransaction(
+          (Handle handle) -> {
+            handle
+                .createUpdate(
+                    "UPDATE room SET title = :title, start_interval = :start, end_interval = :end WHERE id = :id ")
+                .bind("id", id)
+                .bind("title", title)
+                .bind("start", LocalTime.parse(start))
+                .bind("end", LocalTime.parse(end))
+                .execute();
+          });
+    } catch (Exception e) {
+      throw new RoomExceptions.RoomDatabaseException("Cannot update room", e);
+    }
   }
 }

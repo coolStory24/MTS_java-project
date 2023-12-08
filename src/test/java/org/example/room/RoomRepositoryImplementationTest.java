@@ -49,7 +49,7 @@ class RoomRepositoryImplementationTest {
     assertEquals(orgId, room.id());
   }
 
-  @Disabled("RoomRepository methods must be implemented first")
+
   @Test
   @DisplayName("Should update room by id")
   void shouldUpdateRoomById() {
@@ -69,7 +69,6 @@ class RoomRepositoryImplementationTest {
     assertEquals(roomId, updatedRoom.id());
   }
 
-  @Disabled("RoomRepository methods must be implemented first")
   @Test
   @DisplayName("Should delete room by id")
   void shouldDeleteRoomById() {
@@ -99,7 +98,6 @@ class RoomRepositoryImplementationTest {
     assertEquals("Cannot create room", exception.getMessage());
   }
 
-  @Disabled("RoomRepository methods must be implemented first")
   @Test
   @DisplayName("Should throw RoomDatabaseException when updating room with invalid parameters")
   void shouldThrowExceptionWhenUpdatingRoomWithInvalidParameters() {
@@ -115,7 +113,7 @@ class RoomRepositoryImplementationTest {
     assertEquals("Cannot update room", exception.getMessage());
   }
 
-  @Disabled("RoomRepository methods must be implemented first")
+
   @Test
   @DisplayName("Should throw RoomDatabaseException when deleting room with invalid id")
   void shouldThrowExceptionWhenDeletingRoomWithInvalidId() {
@@ -123,7 +121,7 @@ class RoomRepositoryImplementationTest {
 
     long invalidRoomId = -1;
 
-    RoomExceptions.RoomDatabaseException exception =
+    var exception =
         assertThrows(
             RoomExceptions.RoomDatabaseException.class, () -> repository.delete(invalidRoomId));
 
