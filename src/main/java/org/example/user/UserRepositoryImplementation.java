@@ -68,15 +68,16 @@ public class UserRepositoryImplementation implements UserRepository {
   @Override
   public void update(long id, String name) throws UserExceptions.UserDatabaseException {
     try {
-      var rowsAffected = jdbi.inTransaction(
-          (Handle handle) -> {
-            return handle
-                .createUpdate("UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
-                .bind("id", id)
-                .bind("nameUser", name)
-                .execute();
-          });
-      if (rowsAffected == 0){
+      var rowsAffected =
+          jdbi.inTransaction(
+              (Handle handle) -> {
+                return handle
+                    .createUpdate("UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
+                    .bind("id", id)
+                    .bind("nameUser", name)
+                    .execute();
+              });
+      if (rowsAffected == 0) {
         throw new UserExceptions.UserDatabaseException("Cannot update user");
       }
     } catch (Exception e) {
