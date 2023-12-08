@@ -3,8 +3,6 @@ package org.example.user;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.result.ResultBearing;
-
-import java.time.LocalTime;
 import java.util.Map;
 
 public class UserRepositoryImplementation implements UserRepository {
