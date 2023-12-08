@@ -6,6 +6,7 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.result.ResultBearing;
 
+
 public class RoomRepositoryImplementation implements RoomRepository {
   private final Jdbi jdbi;
 
