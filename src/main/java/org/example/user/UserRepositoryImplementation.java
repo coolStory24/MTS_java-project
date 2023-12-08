@@ -59,9 +59,9 @@ public class UserRepositoryImplementation implements UserRepository {
     try {
       if (getById(id) != null) {
         jdbi.useTransaction(
-                (Handle handle) -> {
-                  handle.createUpdate("DELETE FROM \"user\" WHERE id = :id").bind("id", id).execute();
-                });
+            (Handle handle) -> {
+              handle.createUpdate("DELETE FROM \"user\" WHERE id = :id").bind("id", id).execute();
+            });
       }
     } catch (Exception e) {
       throw new UserExceptions.UserDatabaseException("Cannot delete user", e);
@@ -72,14 +72,13 @@ public class UserRepositoryImplementation implements UserRepository {
   public void update(long id, String name) throws UserExceptions.UserDatabaseException {
     try {
       jdbi.useTransaction(
-              (Handle handle) -> {
-                handle
-                        .createUpdate(
-                                "UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
-                        .bind("id", id)
-                        .bind("nameUser", name)
-                        .execute();
-              });
+          (Handle handle) -> {
+            handle
+                .createUpdate("UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
+                .bind("id", id)
+                .bind("nameUser", name)
+                .execute();
+          });
     } catch (Exception e) {
       throw new UserExceptions.UserDatabaseException("Cannot update user", e);
     }

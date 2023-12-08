@@ -49,7 +49,6 @@ class RoomRepositoryImplementationTest {
     assertEquals(orgId, room.id());
   }
 
-
   @Test
   @DisplayName("Should update room by id")
   void shouldUpdateRoomById() {
@@ -112,7 +111,6 @@ class RoomRepositoryImplementationTest {
 
     assertEquals("Cannot update room", exception.getMessage());
   }
-
 
   @Test
   @DisplayName("Should throw RoomDatabaseException when deleting room with invalid id")
