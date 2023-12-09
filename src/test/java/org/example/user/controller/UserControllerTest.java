@@ -54,8 +54,8 @@ class UserControllerTest {
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
                             """
-                  {"name": "Jack"}
-                  """))
+                        {"name": "Jack"}
+                    """))
                     .uri(URI.create("http://localhost:%d/api/user".formatted(service.port())))
                     .build(),
                 HttpResponse.BodyHandlers.ofString(UTF_8));
@@ -154,10 +154,8 @@ class UserControllerTest {
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
                             """
-                          {
-                              name: "John"
-                          }
-                    """))
+                             {name: "John"}
+                            """))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/user/%d".formatted(service.port(), userId)))
@@ -219,10 +217,8 @@ class UserControllerTest {
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
                             """
-                          {
-                              name: "John"
-                          }
-                    """))
+                            {name: "John"}
+                            """))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/user/%d".formatted(service.port(), userId)))
