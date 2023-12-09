@@ -55,12 +55,11 @@ class RoomControllerTest {
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
                             """
-            {
-              "name": "Room1",
-              "start": "09:00:00",
-              "end": "20:00:00"
-            }
-      """))
+                              {
+                                "name": "Room1",
+                                "start": "09:00:00",
+                                "end": "20:00:00"
+                              }"""))
                     .uri(URI.create("http://localhost:%d/api/room".formatted(service.port())))
                     .build(),
                 HttpResponse.BodyHandlers.ofString(UTF_8));
@@ -162,12 +161,11 @@ class RoomControllerTest {
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
                             """
-              {
-                  "name": "Updated Room",
-                  "start: "05:00:00",
-                  "end": "09:00:00"
-              }
-        """))
+                          {
+                              "name": "Updated Room",
+                              "start: "05:00:00",
+                              "end": "09:00:00"
+                          }"""))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
@@ -228,12 +226,11 @@ class RoomControllerTest {
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
                             """
-              {
-                  "name": "Invalid Room",
-                  "start: "06:00:00",
-                  "end": "10:00:00"
-              }
-        """))
+                        {
+                            "name": "Invalid Room",
+                            "start: "06:00:00",
+                            "end": "10:00:00"
+                        }"""))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
