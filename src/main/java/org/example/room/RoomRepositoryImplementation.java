@@ -48,10 +48,10 @@ public class RoomRepositoryImplementation implements RoomRepository {
                 handle
                     .createUpdate(
                         "INSERT INTO room (title, start_interval, end_interval) "
-                            + "VALUES (:title, :startInterval, :endInterval)")
+                            + "VALUES (:title, :start, :end)")
                     .bind("title", title)
-                    .bind("startInterval", LocalTime.parse(start))
-                    .bind("endInterval", LocalTime.parse(end))
+                    .bind("start", LocalTime.parse(start))
+                    .bind("end", LocalTime.parse(end))
                     .executeAndReturnGeneratedKeys("id");
             Map<String, Object> mapResult = resultBearing.mapToMap().first();
             return ((Long) mapResult.get("id"));

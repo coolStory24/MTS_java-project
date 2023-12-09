@@ -1,12 +1,12 @@
 package org.example.room;
 
 public interface RoomService {
-  RoomRepository.RoomEntity getById(long id) throws RoomExceptions.RoomNotFoundException;
+  RoomRepository.RoomEntity getRoomById(long id) throws RoomExceptions.RoomNotFoundException;
 
-  long create(String title, String start, String end) throws RoomExceptions.RoomCreateException;
+  long createRoom(String title, String start, String end) throws RoomExceptions.RoomCreateException;
 
-  void update(long id, String title, String start, String end)
+  void updateRoom(long id, String title, String start, String end)
       throws RoomExceptions.RoomUpdateException;
 
-  void delete(long id) throws RoomExceptions.RoomDeleteException;
+  void deleteRoom(long id) throws RoomExceptions.RoomDeleteException;
 }
