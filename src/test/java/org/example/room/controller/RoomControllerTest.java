@@ -228,8 +228,8 @@ class RoomControllerTest {
                             """
                         {
                             "name": "Invalid Room",
-                            "start: "06:00:00",
-                            "end": "10:00:00"
+                            "start": "05:00:00",
+                            "end": "09:00:00"
                         }"""))
                     .uri(
                         URI.create(
