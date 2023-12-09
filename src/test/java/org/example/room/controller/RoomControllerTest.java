@@ -54,12 +54,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
-                            """
-                              {
-                                "name": "Room1",
-                                "start": "09:00:00",
-                                "end": "20:00:00"
-                              }"""))
+                            "{\"name\":\"Room1\",\"start\":\"09:00:00\",\"end\":\"20:00:00\"}"))
                     .uri(URI.create("http://localhost:%d/api/room".formatted(service.port())))
                     .build(),
                 HttpResponse.BodyHandlers.ofString(UTF_8));
