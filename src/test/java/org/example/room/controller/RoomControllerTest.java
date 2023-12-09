@@ -160,12 +160,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
-                            """
-                          {
-                              "name": "Updated Room",
-                              "start: "05:00:00",
-                              "end": "09:00:00"
-                          }"""))
+                            "{\"name\":\"Updated Room\",\"start\":\"05:00:00\",\"end\":\"09:00:00\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
@@ -225,12 +220,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
-                            """
-                        {
-                            "name": "Invalid Room",
-                            "start": "05:00:00",
-                            "end": "09:00:00"
-                        }"""))
+                            "{\"name\":\"Invalid Room\",\"start\":\"05:00:00\",\"end\":\"09:00:00\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
