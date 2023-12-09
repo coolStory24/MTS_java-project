@@ -51,9 +51,7 @@ class UserControllerTest {
         HttpClient.newHttpClient()
             .send(
                 HttpRequest.newBuilder()
-                    .POST(
-                        HttpRequest.BodyPublishers.ofString(
-                            "{\"name\": \"Jack\"}"))
+                    .POST(HttpRequest.BodyPublishers.ofString("{\"name\": \"Jack\"}"))
                     .uri(URI.create("http://localhost:%d/api/user".formatted(service.port())))
                     .build(),
                 HttpResponse.BodyHandlers.ofString(UTF_8));
