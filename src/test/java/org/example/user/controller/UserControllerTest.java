@@ -151,11 +151,7 @@ class UserControllerTest {
         HttpClient.newHttpClient()
             .send(
                 HttpRequest.newBuilder()
-                    .PUT(
-                        HttpRequest.BodyPublishers.ofString(
-                            """
-                             {name: "John"}
-                            """))
+                    .PUT(HttpRequest.BodyPublishers.ofString("{name: \"John\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/user/%d".formatted(service.port(), userId)))
@@ -214,11 +210,7 @@ class UserControllerTest {
         HttpClient.newHttpClient()
             .send(
                 HttpRequest.newBuilder()
-                    .PUT(
-                        HttpRequest.BodyPublishers.ofString(
-                            """
-                            {name: "John"}
-                            """))
+                    .PUT(HttpRequest.BodyPublishers.ofString("{name: \"John\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/user/%d".formatted(service.port(), userId)))
