@@ -30,6 +30,8 @@ public class UserController implements Controller {
   public void initializeEndpoints() {
     findUserById();
     createUser();
+    updateUser();
+    deleteUser();
   }
 
   private void findUserById() {
@@ -44,11 +46,11 @@ public class UserController implements Controller {
 
             var user = userService.findUserById(userId);
             response.status(HttpStatus.OK_200);
-            LOG.debug("User successfully added");
+            LOG.debug("User successfully found");
             return objectMapper.writeValueAsString(
                 new UserResponse.FindUser(user.id(), user.name()));
           } catch (UserExceptions.UserNotFoundException e) {
-            LOG.warn("Cannot create a new user", e);
+            LOG.warn("Cannot find the user with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
             return objectMapper.writeValueAsString(new UserErrorResponse(e.getMessage()));
           } catch (RuntimeException e) {
@@ -88,7 +90,61 @@ public class UserController implements Controller {
         });
   }
 
-  // TODO: 12/9/23 updateUser method
+  private void updateUser() {
+    service.put(
+        "/api/user/:id",
+        (Request request, Response response) -> {
+          response.type("application/json");
+          String id = request.params("id");
+          String body = request.body();
 
-  // TODO: 12/9/23 deleteUser method
+          UserRequest.UpdateUser updateUserRequest = objectMapper.readValue(body,
+              UserRequest.UpdateUser.class);
+
+          try {
+            var userId = Long.parseLong(id);
+
+            userService.updateUser(userId, updateUserRequest.name());
+
+            response.status(HttpStatus.OK_200);
+            LOG.debug("User successfully updated");
+            return objectMapper.writeValueAsString(new UserResponse.UpdateUser());
+          } catch (UserExceptions.UserUpdateException e) {
+            LOG.warn("Cannot update the user with id: " + id, e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(new UserErrorResponse(e.getMessage()));
+          } catch (RuntimeException e) {
+            LOG.error("Unhandled error", e);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            return objectMapper.writeValueAsString(new UserErrorResponse("Internal server error"));
+          }
+        }
+    );
+  }
+
+  private void deleteUser() {
+    service.delete(
+        "/api/user/:id",
+        (Request request, Response response) -> {
+          response.type("application/json");
+          String id = request.params("id");
+
+          try {
+            var userId = Long.parseLong(id);
+            userService.deleteUser(userId);
+
+            response.status(HttpStatus.OK_200);
+            LOG.debug("User successfully deleted");
+            return objectMapper.writeValueAsString(new UserResponse.DeleteUser());
+          } catch (UserExceptions.UserDeleteException e) {
+            LOG.warn("Cannot delete the user with id: " + id, e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(new UserErrorResponse(e.getMessage()));
+          } catch (RuntimeException e) {
+            LOG.error("Unhandled error", e);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            return objectMapper.writeValueAsString(new UserErrorResponse("Internal server error"));
+          }
+        });
+  }
 }
