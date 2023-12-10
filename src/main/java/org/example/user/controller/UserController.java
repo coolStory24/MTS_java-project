@@ -98,8 +98,8 @@ public class UserController implements Controller {
           String id = request.params("id");
           String body = request.body();
 
-          UserRequest.UpdateUser updateUserRequest = objectMapper.readValue(body,
-              UserRequest.UpdateUser.class);
+          UserRequest.UpdateUser updateUserRequest =
+              objectMapper.readValue(body, UserRequest.UpdateUser.class);
 
           try {
             var userId = Long.parseLong(id);
@@ -118,8 +118,7 @@ public class UserController implements Controller {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
             return objectMapper.writeValueAsString(new UserErrorResponse("Internal server error"));
           }
-        }
-    );
+        });
   }
 
   private void deleteUser() {

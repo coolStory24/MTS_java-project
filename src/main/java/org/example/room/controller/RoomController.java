@@ -46,7 +46,9 @@ public class RoomController implements Controller {
               objectMapper.readValue(body, RoomRequest.CreateRoom.class);
 
           try {
-            var roomId = roomService.createRoom(addRoomRequest.title(), addRoomRequest.start(), addRoomRequest.end());
+            var roomId =
+                roomService.createRoom(
+                    addRoomRequest.title(), addRoomRequest.start(), addRoomRequest.end());
 
             response.status(HttpStatus.CREATED_201);
             LOG.debug("Room successfully added");
@@ -71,14 +73,17 @@ public class RoomController implements Controller {
           String id = request.params("id");
           String body = request.body();
 
-          RoomRequest.UpdateRoom updateRoomRequest = objectMapper.readValue(body,
-              RoomRequest.UpdateRoom.class);
+          RoomRequest.UpdateRoom updateRoomRequest =
+              objectMapper.readValue(body, RoomRequest.UpdateRoom.class);
 
           try {
             var roomId = Long.parseLong(id);
 
-            roomService.updateRoom(roomId, updateRoomRequest.title(),
-                updateRoomRequest.start(), updateRoomRequest.end());
+            roomService.updateRoom(
+                roomId,
+                updateRoomRequest.title(),
+                updateRoomRequest.start(),
+                updateRoomRequest.end());
 
             response.status(HttpStatus.OK_200);
             LOG.debug("Room successfully updated");
@@ -92,8 +97,7 @@ public class RoomController implements Controller {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
             return objectMapper.writeValueAsString(new RoomErrorResponse("Internal server error"));
           }
-        }
-    );
+        });
   }
 
   private void findRoomById() {
@@ -110,7 +114,8 @@ public class RoomController implements Controller {
             response.status(HttpStatus.OK_200);
             LOG.debug("Room successfully found");
             return objectMapper.writeValueAsString(
-                new RoomResponse.FindRoom(room.id(), room.title(), room.startInterval(), room.endInterval()));
+                new RoomResponse.FindRoom(
+                    room.id(), room.title(), room.startInterval(), room.endInterval()));
           } catch (RoomExceptions.RoomNotFoundException e) {
             LOG.warn("Cannot find the room with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
@@ -148,5 +153,4 @@ public class RoomController implements Controller {
           }
         });
   }
-
 }
