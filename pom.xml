@@ -173,6 +173,7 @@
                             <excludes>
                                 <exclude>**/*Config.*</exclude>
                                 <exclude>**/*Main.*</exclude>
+                                <exclude>**/utils/*</exclude>
                             </excludes>
                             <rules>
                                 <rule>
