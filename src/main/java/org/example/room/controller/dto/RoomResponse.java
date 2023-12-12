@@ -7,5 +7,4 @@ public class RoomResponse {
 
   public record UpdateRoom() {}
 
-  public record DeleteRoom() {}
 }

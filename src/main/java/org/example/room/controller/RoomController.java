@@ -139,9 +139,9 @@ public class RoomController implements Controller {
             var roomId = Long.parseLong(id);
             roomService.deleteRoom(roomId);
 
-            response.status(HttpStatus.OK_200);
+            response.status(HttpStatus.NO_CONTENT_204);
             LOG.debug("Room successfully deleted");
-            return objectMapper.writeValueAsString(new RoomResponse.DeleteRoom());
+            return "";
           } catch (RoomExceptions.RoomDeleteException e) {
             LOG.warn("Cannot delete the room with id: " + id, e);
             response.status(HttpStatus.BAD_REQUEST_400);

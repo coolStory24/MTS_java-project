@@ -9,3 +9,4 @@ public class UserResponse {
 
   public record DeleteUser() {}
 }
+

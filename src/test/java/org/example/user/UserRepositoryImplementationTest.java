@@ -9,7 +9,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Disabled("UserRepository methods must be implemented first")
 @Testcontainers
 @DisplayName("Pg user repository test")
 class UserRepositoryImplementationTest {

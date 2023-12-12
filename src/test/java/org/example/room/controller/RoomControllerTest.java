@@ -20,7 +20,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import spark.Service;
 
-@Disabled("RoomController methods must be implemented first")
 @DisplayName("Room controller test")
 class RoomControllerTest {
 
@@ -54,7 +53,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
-                            "{\"name\":\"Room1\",\"start\":\"09:00:00\",\"end\":\"20:00:00\"}"))
+                            "{\"title\":\"Room1\",\"start\":\"09:00:00\",\"end\":\"20:00:00\"}"))
                     .uri(URI.create("http://localhost:%d/api/room".formatted(service.port())))
                     .build(),
                 HttpResponse.BodyHandlers.ofString(UTF_8));
@@ -155,7 +154,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
-                            "{\"name\":\"Updated Room\",\"start\":\"05:00:00\",\"end\":\"09:00:00\"}"))
+                            "{\"title\": \"Updated Room\", \"start\": \"05:00:00\", \"end\": \"09:00:00\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
@@ -202,7 +201,7 @@ class RoomControllerTest {
         new Application(List.of(new RoomController(service, objectMapper, roomService)));
 
     var roomId = 1L;
-    Mockito.doThrow(new RoomErrorResponse("Update failed for room with id 1"))
+    Mockito.doThrow(new RoomExceptions.RoomUpdateException("Update failed for room with id 1"))
         .when(roomService)
         .updateRoom(roomId, "Invalid Room", "05:00:00", "09:00:00");
 
@@ -215,7 +214,7 @@ class RoomControllerTest {
                 HttpRequest.newBuilder()
                     .PUT(
                         HttpRequest.BodyPublishers.ofString(
-                            "{\"name\":\"Invalid Room\",\"start\":\"05:00:00\",\"end\":\"09:00:00\"}"))
+                            "{\"title\":\"Invalid Room\",\"start\":\"05:00:00\",\"end\":\"09:00:00\"}"))
                     .uri(
                         URI.create(
                             "http://localhost:%d/api/room/%d".formatted(service.port(), roomId)))
@@ -237,7 +236,7 @@ class RoomControllerTest {
         new Application(List.of(new RoomController(service, objectMapper, roomService)));
 
     var roomId = 1L;
-    Mockito.doThrow(new RoomErrorResponse("Deletion failed for room with id 1"))
+    Mockito.doThrow(new RoomExceptions.RoomDeleteException("Deletion failed for room with id 1"))
         .when(roomService)
         .deleteRoom(roomId);
 

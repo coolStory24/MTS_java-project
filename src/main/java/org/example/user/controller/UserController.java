@@ -132,9 +132,9 @@ public class UserController implements Controller {
             var userId = Long.parseLong(id);
             userService.deleteUser(userId);
 
-            response.status(HttpStatus.OK_200);
+            response.status(HttpStatus.NO_CONTENT_204);
             LOG.debug("User successfully deleted");
-            return objectMapper.writeValueAsString(new UserResponse.DeleteUser());
+            return "";
           } catch (UserExceptions.UserDeleteException e) {
             LOG.warn("Cannot delete the user with id: " + id, e);
             response.status(HttpStatus.BAD_REQUEST_400);

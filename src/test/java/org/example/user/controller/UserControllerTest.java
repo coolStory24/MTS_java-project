@@ -128,7 +128,6 @@ class UserControllerTest {
     assertEquals("User with id 1 not found", userFindResponse.getMessage());
   }
 
-  @Disabled("UserController methods must be implemented first")
   @Test
   @DisplayName("Should 200 if user is successfully updated")
   void should200IfUserIsSuccessfullyUpdated() throws IOException, InterruptedException {
@@ -157,7 +156,6 @@ class UserControllerTest {
     Mockito.verify(userService, Mockito.times(1)).updateUser(1L, "John");
   }
 
-  @Disabled("UserController methods must be implemented first")
   @Test
   @DisplayName("Should 204 if user is successfully deleted")
   void should204IfUserIsSuccessfullyDeleted() throws Exception {
@@ -185,7 +183,6 @@ class UserControllerTest {
     assertEquals(204, response.statusCode());
   }
 
-  @Disabled("UserController methods must be implemented first")
   @Test
   @DisplayName("Should 400 if update goes wrong")
   void should400IfUpdateFails() throws Exception {
@@ -195,7 +192,7 @@ class UserControllerTest {
         new Application(List.of(new UserController(service, objectMapper, userService)));
 
     var userId = 1L;
-    Mockito.doThrow(new UserErrorResponse("Update failed for user with id 1"))
+    Mockito.doThrow(new UserExceptions.UserUpdateException("Update failed for user with id 1"))
         .when(userService)
         .updateUser(userId, "John");
 
@@ -219,7 +216,6 @@ class UserControllerTest {
     assertEquals("Update failed for user with id 1", userErrorResponse.getMessage());
   }
 
-  @Disabled("UserController methods must be implemented first")
   @Test
   @DisplayName("Should 400 if deletion goes wrong")
   void should400IfDeletionFails() throws Exception {
@@ -229,7 +225,7 @@ class UserControllerTest {
         new Application(List.of(new UserController(service, objectMapper, userService)));
 
     var userId = 1L;
-    Mockito.doThrow(new UserErrorResponse("Deletion failed for user with id 1"))
+    Mockito.doThrow(new UserExceptions.UserDeleteException("Deletion failed for user with id 1"))
         .when(userService)
         .deleteUser(userId);
 
