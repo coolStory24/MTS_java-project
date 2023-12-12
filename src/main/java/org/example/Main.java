@@ -1,16 +1,31 @@
 package org.example;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import java.util.ArrayList;
+import java.util.Scanner;
 import org.example.room.Room;
 import org.example.room.RoomActions;
 import org.example.user.User;
 import org.example.user.UserActions;
 import org.example.utils.Actions;
-
-import java.util.ArrayList;
-import java.util.Scanner;
+import org.flywaydb.core.Flyway;
 
 public class Main {
   public static void main(String[] args) {
+    Config config = ConfigFactory.load();
+
+    Flyway flyway =
+        Flyway.configure()
+            .outOfOrder(true)
+            .locations("classpath:db/migrations")
+            .dataSource(
+                config.getString("app.database.url"),
+                config.getString("app.database.user"),
+                config.getString("app.database.password"))
+            .load();
+    flyway.migrate();
+
     Scanner input = new Scanner(System.in);
     ArrayList<User> users = new ArrayList<>();
     ArrayList<Room> rooms = new ArrayList<>();
