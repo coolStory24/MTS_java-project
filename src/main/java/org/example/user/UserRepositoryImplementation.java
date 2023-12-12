@@ -1,6 +1,9 @@
 package org.example.user;
 
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.result.ResultBearing;
+import java.util.Map;
 
 public class UserRepositoryImplementation implements UserRepository {
   private final Jdbi jdbi;
@@ -11,23 +14,74 @@ public class UserRepositoryImplementation implements UserRepository {
 
   @Override
   public UserEntity getById(long id) throws UserExceptions.UserDatabaseException {
-    // TODO: 12/6/23 getById method
-    return null;
+    try {
+      return jdbi.inTransaction(
+          (Handle handle) -> {
+            Map<String, Object> result =
+                handle
+                    .createQuery("SELECT u.id, u.name " + "FROM \"user\" u " + "WHERE u.id = :id")
+                    .bind("id", id)
+                    .mapToMap()
+                    .first();
+            return new UserRepository.UserEntity(
+                (Long) result.get("id"), (String) result.get("name"));
+          });
+
+    } catch (Exception e) {
+      throw new UserExceptions.UserDatabaseException("Cannot find user", e);
+    }
   }
 
   @Override
   public long create(String name) throws UserExceptions.UserDatabaseException {
-    // TODO: 12/6/23 create method
-    return 0;
+    try {
+      return jdbi.inTransaction(
+          (Handle handle) -> {
+            ResultBearing resultBearing =
+                handle
+                    .createUpdate("INSERT INTO \"user\" (name) " + "VALUES (:name)")
+                    .bind("name", name)
+                    .executeAndReturnGeneratedKeys("id");
+            Map<String, Object> mapResult = resultBearing.mapToMap().first();
+            return ((Long) mapResult.get("id"));
+          });
+    } catch (Exception e) {
+      throw new UserExceptions.UserDatabaseException("Cannot create user", e);
+    }
   }
 
   @Override
   public void delete(long id) throws UserExceptions.UserDatabaseException {
-    // TODO: 12/6/23 delete method
+    var countChange =
+        jdbi.inTransaction(
+            (Handle handle) -> {
+              return handle
+                  .createUpdate("DELETE FROM \"user\" WHERE id = :id")
+                  .bind("id", id)
+                  .execute();
+            });
+    if (countChange == 0) {
+      throw new UserExceptions.UserDatabaseException("Cannot delete user");
+    }
   }
 
   @Override
   public void update(long id, String name) throws UserExceptions.UserDatabaseException {
-    // TODO: 12/6/23 update method
+    try {
+      var rowsAffected =
+          jdbi.inTransaction(
+              (Handle handle) -> {
+                return handle
+                    .createUpdate("UPDATE \"user\" SET name = :nameUser WHERE id = :id ")
+                    .bind("id", id)
+                    .bind("nameUser", name)
+                    .execute();
+              });
+      if (rowsAffected == 0) {
+        throw new UserExceptions.UserDatabaseException("Cannot update user");
+      }
+    } catch (Exception e) {
+      throw new UserExceptions.UserDatabaseException("Cannot update user", e);
+    }
   }
 }

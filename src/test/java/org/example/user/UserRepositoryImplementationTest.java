@@ -102,7 +102,7 @@ class UserRepositoryImplementationTest {
     UserExceptions.UserDatabaseException exception =
         assertThrows(UserExceptions.UserDatabaseException.class, () -> repository.create(null));
 
-    assertEquals("Cannot update user", exception.getMessage());
+    assertEquals("Cannot create user", exception.getMessage());
   }
 
   @Test
