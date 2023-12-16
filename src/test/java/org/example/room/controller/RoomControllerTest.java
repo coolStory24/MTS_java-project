@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import org.example.Application;
+import org.example.controller.ReservationResponse;
 import org.example.room.RoomExceptions;
 import org.example.room.RoomRepository;
 import org.example.room.RoomService;
