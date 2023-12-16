@@ -11,7 +11,7 @@ public class RoomExceptions {
     }
   }
 
-  public static class RoomNotFoundException extends RoomDatabaseException {
+  public static class RoomNotFoundException extends RuntimeException {
     public RoomNotFoundException(String message) {
       super(message);
     }
