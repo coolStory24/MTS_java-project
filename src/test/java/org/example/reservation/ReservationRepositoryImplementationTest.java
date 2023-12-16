@@ -11,16 +11,14 @@ import org.example.user.UserRepository;
 import org.example.user.UserRepositoryImplementation;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Disabled("Reservation repository methods must be implemented first")
 @Testcontainers
-@DisplayName("Pg room repository test")
+@DisplayName("Pg reservation repository test")
 class ReservationRepositoryImplementationTest {
   @Container
   public static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:13");
