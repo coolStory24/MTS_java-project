@@ -61,7 +61,12 @@ public class ReservationController implements Controller {
             LOG.debug("Reservation successfully found");
             return objectMapper.writeValueAsString(
                 new ReservationResponse.FindReservation(
-                    reservation.id(), reservation.start(), reservation.end(), reservation.startDay(), reservation.userId(), reservation.roomId()));
+                    reservation.id(),
+                    reservation.start(),
+                    reservation.end(),
+                    reservation.startDay(),
+                    reservation.userId(),
+                    reservation.roomId()));
           } catch (ReservationExceptions.ReservationNotFoundException e) {
             LOG.warn("Cannot find the reservation with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
@@ -69,7 +74,8 @@ public class ReservationController implements Controller {
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            return objectMapper.writeValueAsString(new ReservationErrorResponse("Internal server error"));
+            return objectMapper.writeValueAsString(
+                new ReservationErrorResponse("Internal server error"));
           }
         });
   }
@@ -88,8 +94,7 @@ public class ReservationController implements Controller {
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for user are successfully found");
             return objectMapper.writeValueAsString(
-                new ReservationResponse.FindReservationsForUser(
-                    reservationsForUser));
+                new ReservationResponse.FindReservationsForUser(reservationsForUser));
           } catch (UserExceptions.UserNotFoundException e) {
             LOG.warn("Cannot find the user with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
@@ -97,7 +102,8 @@ public class ReservationController implements Controller {
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            return objectMapper.writeValueAsString(new ReservationErrorResponse("Internal server error"));
+            return objectMapper.writeValueAsString(
+                new ReservationErrorResponse("Internal server error"));
           }
         });
   }
@@ -118,8 +124,7 @@ public class ReservationController implements Controller {
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for room on this date are successfully found");
             return objectMapper.writeValueAsString(
-                new ReservationResponse.FindReservationsForRoom(
-                    reservationsForRoom));
+                new ReservationResponse.FindReservationsForRoom(reservationsForRoom));
           } catch (RoomExceptions.RoomNotFoundException e) {
             LOG.warn("Cannot find the room with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
@@ -127,7 +132,8 @@ public class ReservationController implements Controller {
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            return objectMapper.writeValueAsString(new ReservationErrorResponse("Internal server error"));
+            return objectMapper.writeValueAsString(
+                new ReservationErrorResponse("Internal server error"));
           }
         });
   }
@@ -144,12 +150,18 @@ public class ReservationController implements Controller {
               objectMapper.readValue(body, ReservationRequest.CreateReservation.class);
 
           try {
-            var reservationId = reservationService.createReservation(createReservationRequest.start(), createReservationRequest.end(),
-                createReservationRequest.startDay(), createReservationRequest.userId(), createReservationRequest.roomId());
+            var reservationId =
+                reservationService.createReservation(
+                    createReservationRequest.start(),
+                    createReservationRequest.end(),
+                    createReservationRequest.startDay(),
+                    createReservationRequest.userId(),
+                    createReservationRequest.roomId());
 
             response.status(HttpStatus.CREATED_201);
             LOG.debug("Reservation successfully added");
-            return objectMapper.writeValueAsString(new ReservationResponse.CreateReservation(reservationId));
+            return objectMapper.writeValueAsString(
+                new ReservationResponse.CreateReservation(reservationId));
           } catch (ReservationExceptions.ReservationCreateException e) {
             LOG.warn("Cannot create a new reservation", e);
             response.status(HttpStatus.BAD_REQUEST_400);
@@ -157,7 +169,8 @@ public class ReservationController implements Controller {
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            return objectMapper.writeValueAsString(new ReservationErrorResponse("Internal server error"));
+            return objectMapper.writeValueAsString(
+                new ReservationErrorResponse("Internal server error"));
           }
         });
   }
@@ -183,7 +196,8 @@ public class ReservationController implements Controller {
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            return objectMapper.writeValueAsString(new ReservationErrorResponse("Internal server error"));
+            return objectMapper.writeValueAsString(
+                new ReservationErrorResponse("Internal server error"));
           }
         });
   }

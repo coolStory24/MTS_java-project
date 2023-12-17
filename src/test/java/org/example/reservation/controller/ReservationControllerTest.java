@@ -148,8 +148,7 @@ class ReservationControllerTest {
 
     var reservationFindResponse =
         objectMapper.readValue(
-            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {
-            });
+            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {});
 
     var firstReservation = reservationFindResponse.get(0);
 
@@ -200,8 +199,7 @@ class ReservationControllerTest {
 
     var reservationFindResponse =
         objectMapper.readValue(
-            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {
-            });
+            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {});
 
     var firstReservation = reservationFindResponse.get(0);
 
