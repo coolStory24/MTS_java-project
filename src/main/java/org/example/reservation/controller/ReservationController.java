@@ -46,8 +46,6 @@ public class ReservationController implements Controller {
     deleteReservation();
   }
 
-  ;
-
   public void findReservationById() {
     service.get(
         "/api/reservation/:id",

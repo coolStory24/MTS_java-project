@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
 import org.example.Application;
 import org.example.controller.ReservationResponse;
 import org.example.reservation.ReservationRepository;
@@ -146,7 +148,8 @@ class ReservationControllerTest {
 
     var reservationFindResponse =
         objectMapper.readValue(
-            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {});
+            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {
+            });
 
     var firstReservation = reservationFindResponse.get(0);
 
@@ -197,7 +200,8 @@ class ReservationControllerTest {
 
     var reservationFindResponse =
         objectMapper.readValue(
-            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {});
+            response.body(), new TypeReference<List<ReservationResponse.FindReservation>>() {
+            });
 
     var firstReservation = reservationFindResponse.get(0);
 
