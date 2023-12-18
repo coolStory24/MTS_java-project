@@ -16,7 +16,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Disabled("Reservation repository methods must be implemented first")
 @Testcontainers
 @DisplayName("Pg reservation repository test")
 class ReservationRepositoryImplementationTest {
@@ -146,7 +145,7 @@ class ReservationRepositoryImplementationTest {
   @DisplayName("Should create a new reservation")
   void shouldCreateNewReservation() throws ReservationExceptions.ReservationDatabaseException {
     ReservationRepository repository = new ReservationRepositoryImplementation(jdbi);
-    LocalTime start = LocalTime.now();
+    LocalTime start = LocalTime.of(10, 30, 0);
     LocalTime end = start.plusHours(1);
     LocalDate startDay = LocalDate.now();
     Long userId = 1L;
@@ -171,7 +170,7 @@ class ReservationRepositoryImplementationTest {
     ReservationRepository repository = new ReservationRepositoryImplementation(jdbi);
     long reservationId =
         repository.createReservation(
-            LocalTime.now(), LocalTime.now().plusHours(1), LocalDate.now(), 1L, 1L);
+            LocalTime.of(16, 30, 0), LocalTime.of(17, 30, 0), LocalDate.of(2023, 12, 18), 1L, 1L);
 
     repository.deleteReservation(reservationId);
 
