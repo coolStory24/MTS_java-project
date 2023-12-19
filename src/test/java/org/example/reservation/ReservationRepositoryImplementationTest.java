@@ -41,7 +41,7 @@ class ReservationRepositoryImplementationTest {
     RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
 
     userRepository.create("John");
-    roomRepository.create("Room1", "10:00:00", "20:00:00");
+    roomRepository.create("Room1", LocalTime.parse("10:00:00"), LocalTime.parse("20:00:00"));
   }
 
   @BeforeEach

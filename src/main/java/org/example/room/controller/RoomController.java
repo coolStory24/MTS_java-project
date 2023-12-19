@@ -1,6 +1,7 @@
 package org.example.room.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalTime;
 import org.eclipse.jetty.http.HttpStatus;
 import org.example.controller.Controller;
 import org.example.room.RoomExceptions;
@@ -48,7 +49,9 @@ public class RoomController implements Controller {
           try {
             var roomId =
                 roomService.createRoom(
-                    addRoomRequest.title(), addRoomRequest.start(), addRoomRequest.end());
+                    addRoomRequest.title(),
+                    LocalTime.parse(addRoomRequest.start()),
+                    LocalTime.parse(addRoomRequest.end()));
 
             response.status(HttpStatus.CREATED_201);
             LOG.debug("Room successfully added");
@@ -82,8 +85,8 @@ public class RoomController implements Controller {
             roomService.updateRoom(
                 roomId,
                 updateRoomRequest.title(),
-                updateRoomRequest.start(),
-                updateRoomRequest.end());
+                LocalTime.parse(updateRoomRequest.start()),
+                LocalTime.parse(updateRoomRequest.end()));
 
             response.status(HttpStatus.OK_200);
             LOG.debug("Room successfully updated");
@@ -115,7 +118,10 @@ public class RoomController implements Controller {
             LOG.debug("Room successfully found");
             return objectMapper.writeValueAsString(
                 new RoomResponse.FindRoom(
-                    room.id(), room.title(), room.startInterval(), room.endInterval()));
+                    room.id(),
+                    room.title(),
+                    room.startInterval().toString(),
+                    room.endInterval().toString()));
           } catch (RoomExceptions.RoomNotFoundException e) {
             LOG.warn("Cannot find the room with id: " + id, e);
             response.status(HttpStatus.NOT_FOUND_404);
