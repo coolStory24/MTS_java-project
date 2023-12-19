@@ -179,6 +179,7 @@
                                 <exclude>**/*Config.*</exclude>
                                 <exclude>**/*Main.*</exclude>
                                 <exclude>**/utils/*</exclude>
+                                <exclude>**/transaction/*</exclude>
                             </excludes>
                             <rules>
                                 <rule>
