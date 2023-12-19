@@ -44,7 +44,10 @@ class RoomControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
     Application application =
         new Application(List.of(new RoomController(service, objectMapper, roomService)));
-    Mockito.when(roomService.createRoom("Room1", LocalTime.parse("09:00:00"), LocalTime.parse("20:00:00"))).thenReturn(1L);
+    Mockito.when(
+            roomService.createRoom(
+                "Room1", LocalTime.parse("09:00:00"), LocalTime.parse("20:00:00")))
+        .thenReturn(1L);
     application.start();
     service.awaitInitialization();
 
@@ -78,7 +81,9 @@ class RoomControllerTest {
     var roomStart = "00:00";
     var roomEnd = "22:00";
     Mockito.when(roomService.getRoomById(roomId))
-        .thenReturn(new RoomRepository.RoomEntity(roomId, roomName, LocalTime.parse(roomStart) , LocalTime.parse(roomEnd)));
+        .thenReturn(
+            new RoomRepository.RoomEntity(
+                roomId, roomName, LocalTime.parse(roomStart), LocalTime.parse(roomEnd)));
 
     application.start();
     service.awaitInitialization();
@@ -144,7 +149,9 @@ class RoomControllerTest {
         new Application(List.of(new RoomController(service, objectMapper, roomService)));
 
     var roomId = 1L;
-    Mockito.doNothing().when(roomService).updateRoom(1L, "Updated Room", LocalTime.parse("05:00:00"), LocalTime.parse("09:00:00"));
+    Mockito.doNothing()
+        .when(roomService)
+        .updateRoom(1L, "Updated Room", LocalTime.parse("05:00:00"), LocalTime.parse("09:00:00"));
 
     application.start();
     service.awaitInitialization();
@@ -204,7 +211,7 @@ class RoomControllerTest {
     var roomId = 1L;
     Mockito.doThrow(new RoomExceptions.RoomUpdateException("Update failed for room with id 1"))
         .when(roomService)
-        .updateRoom(roomId, "Invalid Room", LocalTime.of(5, 0,0), LocalTime.of(9,0,0));
+        .updateRoom(roomId, "Invalid Room", LocalTime.of(5, 0, 0), LocalTime.of(9, 0, 0));
 
     application.start();
     service.awaitInitialization();
