@@ -78,7 +78,7 @@ public class UserController implements Controller {
             response.status(HttpStatus.CREATED_201);
             LOG.debug("User successfully added");
             return objectMapper.writeValueAsString(new UserResponse.CreateUser(userId));
-          } catch (UserExceptions.UserNotFoundException e) {
+          } catch (UserExceptions.UserCreateException e) {
             LOG.warn("Cannot create a new user", e);
             response.status(HttpStatus.BAD_REQUEST_400);
             return objectMapper.writeValueAsString(new UserErrorResponse(e.getMessage()));
