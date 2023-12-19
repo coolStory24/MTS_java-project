@@ -91,14 +91,14 @@ public class ReservationController implements Controller {
             var reservationsForUser =
                 reservationService.getAllReservationsForUser(userId).stream()
                     .map(
-                        x ->
+                        reservation ->
                             new ReservationResponse.FindReservation(
-                                x.id(),
-                                x.start().toString(),
-                                x.end().toString(),
-                                x.startDay().toString(),
-                                x.userId(),
-                                x.roomId()))
+                                reservation.id(),
+                                reservation.start().toString(),
+                                reservation.end().toString(),
+                                reservation.startDay().toString(),
+                                reservation.userId(),
+                                reservation.roomId()))
                     .collect(Collectors.toList());
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for user are successfully found");
@@ -132,14 +132,14 @@ public class ReservationController implements Controller {
             var reservationsForRoom =
                 reservationService.getAllReservationsForRoom(date, roomId).stream()
                     .map(
-                        x ->
+                        reservation ->
                             new ReservationResponse.FindReservation(
-                                x.id(),
-                                x.start().toString(),
-                                x.end().toString(),
-                                x.startDay().toString(),
-                                x.userId(),
-                                x.roomId()))
+                                reservation.id(),
+                                reservation.start().toString(),
+                                reservation.end().toString(),
+                                reservation.startDay().toString(),
+                                reservation.userId(),
+                                reservation.roomId()))
                     .collect(Collectors.toList());
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for room on this date are successfully found");
