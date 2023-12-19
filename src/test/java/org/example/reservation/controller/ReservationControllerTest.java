@@ -3,7 +3,6 @@ package org.example.reservation.controller;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
@@ -12,7 +11,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.example.Application;
@@ -89,15 +87,6 @@ class ReservationControllerTest {
                 1L))
         .when(reservationService)
         .findReservationById(1L);
-    //    Mockito.when(reservationService.findReservationById(1L))
-    //        .thenReturn(
-    //            new ReservationRepository.ReservationEntity(
-    //                1L,
-    //                LocalTime.of(12, 0, 0),
-    //                LocalTime.of(14, 0, 0),
-    //                LocalDate.of(2023, 12, 1),
-    //                1L,
-    //                1L));
     application.start();
     service.awaitInitialization();
 
