@@ -18,6 +18,9 @@ import spark.Response;
 import spark.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public class ReservationController implements Controller {
   private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
@@ -56,10 +59,10 @@ public class ReservationController implements Controller {
             LOG.debug("Reservation successfully found");
             return objectMapper.writeValueAsString(
                 new ReservationResponse.FindReservation(
-                    reservation.id(),
-                    reservation.start(),
-                    reservation.end(),
-                    reservation.startDay(),
+                    reservationId,
+                    reservation.start().toString(),
+                    reservation.end().toString(),
+                    reservation.startDay().toString(),
                     reservation.userId(),
                     reservation.roomId()));
           } catch (ReservationExceptions.ReservationNotFoundException e) {
@@ -85,7 +88,18 @@ public class ReservationController implements Controller {
           try {
             var userId = Long.parseLong(id);
 
-            var reservationsForUser = reservationService.getAllReservationsForUser(userId);
+            var reservationsForUser =
+                reservationService.getAllReservationsForUser(userId).stream()
+                    .map(
+                        x ->
+                            new ReservationResponse.FindReservation(
+                                x.id(),
+                                x.start().toString(),
+                                x.end().toString(),
+                                x.startDay().toString(),
+                                x.userId(),
+                                x.roomId()))
+                    .collect(Collectors.toList());
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for user are successfully found");
             return objectMapper.writeValueAsString(
@@ -115,7 +129,18 @@ public class ReservationController implements Controller {
             var roomId = Long.parseLong(id);
             var date = LocalDate.parse(onDate);
 
-            var reservationsForRoom = reservationService.getAllReservationsForRoom(date, roomId);
+            var reservationsForRoom =
+                reservationService.getAllReservationsForRoom(date, roomId).stream()
+                    .map(
+                        x ->
+                            new ReservationResponse.FindReservation(
+                                x.id(),
+                                x.start().toString(),
+                                x.end().toString(),
+                                x.startDay().toString(),
+                                x.userId(),
+                                x.roomId()))
+                    .collect(Collectors.toList());
             response.status(HttpStatus.OK_200);
             LOG.debug("Reservations for room on this date are successfully found");
             return objectMapper.writeValueAsString(
@@ -145,11 +170,13 @@ public class ReservationController implements Controller {
               objectMapper.readValue(body, ReservationRequest.CreateReservation.class);
 
           try {
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             var reservationId =
                 reservationService.createReservation(
-                    createReservationRequest.start(),
-                    createReservationRequest.end(),
-                    createReservationRequest.startDay(),
+                    LocalTime.parse(createReservationRequest.start(), formatter1),
+                    LocalTime.parse(createReservationRequest.end(), formatter1),
+                    LocalDate.parse(createReservationRequest.startDay(), formatter2),
                     createReservationRequest.userId(),
                     createReservationRequest.roomId());
 
