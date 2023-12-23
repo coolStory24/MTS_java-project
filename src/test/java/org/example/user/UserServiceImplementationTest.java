@@ -102,4 +102,51 @@ class UserServiceImplementationTest {
 
     assertThrows(UserExceptions.UserNotFoundException.class, () -> userService.findUserById(userId));
   }
+
+  @Test
+  @DisplayName("UserServiceImplementationTest -- tests exception thrown by createUser functionality")
+  void shouldThrowExceptionWhenCreatingUserWithInvalidParameters(){
+    UserRepository userRepository = new UserRepositoryImplementation(jdbi);
+    UserServiceImplementation userService = new UserServiceImplementation(userRepository);
+
+    UserExceptions.UserCreateException exception =
+            assertThrows(
+                    UserExceptions.UserCreateException.class,
+                    () -> userService.createUser(null));
+
+    assertEquals("Cannot create user", exception.getMessage());
+  }
+
+  @Test
+  @DisplayName("UserServiceImplementationTest -- tests exception thrown by updateUser functionality")
+  void shouldThrowExceptionWhenUpdatingUserWithInvalidParameters() {
+    UserRepository userRepository = new UserRepositoryImplementation(jdbi);
+    UserServiceImplementation userService = new UserServiceImplementation(userRepository);
+
+    long userId = userService.createUser("New user to update");
+
+    UserExceptions.UserUpdateException exception =
+            assertThrows(
+                    UserExceptions.UserUpdateException.class,
+                    () -> userService.updateUser(userId, null));
+
+    assertEquals("Cannot update user", exception.getMessage());
+  }
+
+  @Test
+  @DisplayName("UserServiceImplementationTest -- tests exception thrown by deleteUser functionality")
+  void shouldThrowExceptionWhenDeletingUserWithInvalidId() {
+    UserRepository userRepository = new UserRepositoryImplementation(jdbi);
+    UserServiceImplementation userService = new UserServiceImplementation(userRepository);
+
+    long invalidUserId = -1;
+
+    UserExceptions.UserDeleteException exception =
+            assertThrows(
+                    UserExceptions.UserDeleteException.class,
+                    () -> userService.deleteUser(invalidUserId));
+
+    assertEquals("Cannot delete user", exception.getMessage());
+  }
+
 }
