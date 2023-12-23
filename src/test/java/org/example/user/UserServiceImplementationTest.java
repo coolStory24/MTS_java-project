@@ -39,7 +39,7 @@ class UserServiceImplementationTest {
   @BeforeEach
 
   void beforeEach() {
-    jdbi.useTransaction(handle -> handle.createUpdate("DELETE FROM user").execute());
+    jdbi.useTransaction(handle -> handle.createUpdate("DELETE FROM \"user\"").execute());
   }
 
   @Test
