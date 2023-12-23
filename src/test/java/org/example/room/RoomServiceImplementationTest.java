@@ -4,6 +4,7 @@ import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -43,11 +44,27 @@ class RoomServiceImplementationTest {
   }
 
   @Test
-  void getRoomById() {
+  @DisplayName("RoomServiceImplementationTest -- tests getRoomById functionality")
+  void shouldGetRoomById() {
+    RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
+    RoomServiceImplementation roomService = new RoomServiceImplementation(roomRepository);
+
+    long roomId = roomService.createRoom(
+            "Room #1",
+            LocalTime.parse("10:00:00"),
+            LocalTime.parse("22:00:00"));
+
+    RoomRepository.RoomEntity room = roomService.getRoomById(roomId);
+
+    assertEquals("Room #1", room.title());
+    assertEquals(LocalTime.parse("10:00:00"), room.startInterval());
+    assertEquals(LocalTime.parse("22:00:00"), room.endInterval());
+    assertEquals(roomId, room.id());
   }
 
   @Test
-  void createRoom() {
+  @DisplayName("RoomServiceImplementationTest -- tests createRoom functionality")
+  void shouldCreateRoom() {
     RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
     RoomServiceImplementation roomService = new RoomServiceImplementation(roomRepository);
 
@@ -63,10 +80,46 @@ class RoomServiceImplementationTest {
   }
 
   @Test
-  void updateRoom() {
+  @DisplayName("RoomServiceImplementationTest -- tests updateRoom functionality")
+  void shouldUpdateRoom() {
+    RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
+    RoomServiceImplementation roomService = new RoomServiceImplementation(roomRepository);
+
+    long roomId = roomService.createRoom(
+            "Room #1",
+            LocalTime.parse("10:00:00"),
+            LocalTime.parse("22:00:00"));
+    roomService.updateRoom(
+            roomId,
+            "Room #1 (updated)",
+            LocalTime.parse("07:00:00"),
+            LocalTime.parse("19:00:00")
+            );
+    RoomRepository.RoomEntity room = roomService.getRoomById(roomId);
+
+    assertEquals("Room #1 (updated)", room.title());
+    assertEquals(LocalTime.parse("07:00:00"), room.startInterval());
+    assertEquals(LocalTime.parse("19:00:00"), room.endInterval());
+    assertEquals(roomId, room.id());
+
   }
 
   @Test
-  void deleteRoom() {
+  @DisplayName("RoomServiceImplementationTest -- tests deleteRoom functionality")
+  void shouldDeleteRoom() {
+    RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
+    RoomServiceImplementation roomService = new RoomServiceImplementation(roomRepository);
+
+    long roomId = roomService.createRoom(
+            "Room #1",
+            LocalTime.parse("10:00:00"),
+            LocalTime.parse("22:00:00"));
+    assertNotNull(roomService.getRoomById(roomId));
+
+    roomService.deleteRoom(roomId);
+
+    var exception = assertThrows(
+            RoomExceptions.RoomNotFoundException.class,
+            () -> roomService.getRoomById(roomId));
   }
 }
