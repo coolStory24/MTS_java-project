@@ -1,15 +1,23 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import java.util.ArrayList;
-import java.util.Scanner;
-import org.example.room.Room;
-import org.example.room.RoomActions;
-import org.example.user.User;
-import org.example.user.UserActions;
-import org.example.utils.Actions;
+import java.util.List;
+import org.example.reservation.ReservationRepositoryImplementation;
+import org.example.reservation.ReservationServiceImplementation;
+import org.example.reservation.controller.ReservationController;
+import org.example.room.RoomRepositoryImplementation;
+import org.example.room.RoomServiceImplementation;
+import org.example.room.controller.RoomController;
+import org.example.transaction.JdbiTransactionManager;
+import org.example.transaction.TransactionManager;
+import org.example.user.UserRepositoryImplementation;
+import org.example.user.UserServiceImplementation;
+import org.example.user.controller.UserController;
 import org.flywaydb.core.Flyway;
+import org.jdbi.v3.core.Jdbi;
+import spark.Service;
 
 public class Main {
   public static void main(String[] args) {
@@ -26,74 +34,35 @@ public class Main {
             .load();
     flyway.migrate();
 
-    Scanner input = new Scanner(System.in);
-    ArrayList<User> users = new ArrayList<>();
-    ArrayList<Room> rooms = new ArrayList<>();
-    while (true) {
-      System.out.println(
-          "Введите одно из действий: \n"
-              + "1 - Создать пользователя\n"
-              + "2 - Создать аудиторию\n"
-              + "3 - Поменять настройки аудитории\n"
-              + "4 - Забронировать аудиторию на выбранные день и время\n"
-              + "5 - Отменить бронирование\n");
-      String requestNumber = input.next();
-      if (requestNumber.equals("1")) {
-        System.out.print("Введите имя пользователя: ");
-        String userName = input.next();
-        UserActions.newUser(users, userName);
-      } else if (requestNumber.equals("2")) {
-        System.out.print("Введите название аудитории: ");
-        String roomName = input.next();
-        RoomActions.newRoom(rooms, roomName);
-      } else if (requestNumber.equals("3")) {
-        System.out.println("Что именно Вы хотите поменять (имя/интервал)?");
-        String update = input.next();
-        if (update.equals("имя")) {
-          System.out.print("Введите старое и новое имя аудитории (через пробел): ");
-          String oldName = input.next();
-          String newName = input.next();
-          Room room = RoomActions.findRoom(rooms, oldName);
-          RoomActions.rename(room, newName);
-        }
-        if (update.equals("интервал")) {
-          System.out.print(
-              "Введите имя аудитории и границы нового интервала в формате " + "yyyy-MM-dd HH:mm: ");
-          String nameRoom = input.next();
-          String newStartInterval = input.next();
-          String newFinishInterval = input.next();
-          Room room = RoomActions.findRoom(rooms, nameRoom);
-          RoomActions.updateInterval(
-              room,
-              Actions.stringToTime(newStartInterval),
-              Actions.stringToTime(newFinishInterval));
-        }
-      } else if (requestNumber.equals("4")) {
-        System.out.print(
-            "Введите имя пользователя, название аудитории и границы "
-                + "бронирования в формате yyyy-MM-dd HH:mm: ");
-        String nameUser = input.next();
-        String nameRoom = input.next();
-        String timeStart = input.next();
-        String timeFinish = input.next();
-        User user = UserActions.findUsers(users, nameUser);
-        Room room = RoomActions.findRoom(rooms, nameRoom);
-        Actions.reservation(
-            user, room, Actions.stringToTime(timeStart), Actions.stringToTime(timeFinish));
-      } else if (requestNumber.equals("5")) {
-        System.out.print(
-            "Введите имя пользователя, название аудитории и границы бронирования в формате yyyy-MM-dd HH:mm: ");
-        String nameUser = input.next();
-        String nameRoom = input.next();
-        String timeStart = input.next();
-        String timeFinish = input.next();
-        User user = UserActions.findUsers(users, nameUser);
-        Room room = RoomActions.findRoom(rooms, nameRoom);
-        Actions.deleteReservation(
-            user, room, Actions.stringToTime(timeStart), Actions.stringToTime(timeFinish));
-      } else {
-        System.out.println("Было введено некорректное значение. Попробуйте ещё раз");
-      }
-    }
+    Jdbi jdbi =
+        Jdbi.create(
+            config.getString("app.database.url"),
+            config.getString("app.database.user"),
+            config.getString("app.database.password"));
+    TransactionManager transactionManager = new JdbiTransactionManager(jdbi);
+
+    Service service = Service.ignite();
+
+    Application application = getApplication(jdbi, service);
+
+    application.start();
+  }
+
+  private static Application getApplication(Jdbi jdbi, Service service) {
+    var userService = new UserServiceImplementation(new UserRepositoryImplementation(jdbi));
+    var roomService = new RoomServiceImplementation(new RoomRepositoryImplementation(jdbi));
+    var reservationService =
+        new ReservationServiceImplementation(
+            new ReservationRepositoryImplementation(jdbi),
+            new RoomRepositoryImplementation(jdbi),
+            new JdbiTransactionManager(jdbi));
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    return new Application(
+        List.of(
+            new RoomController(service, objectMapper, roomService),
+            new UserController(service, objectMapper, userService),
+            new ReservationController(service, objectMapper, reservationService)));
   }
 }
