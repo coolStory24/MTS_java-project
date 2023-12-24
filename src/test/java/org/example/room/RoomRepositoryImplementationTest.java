@@ -2,6 +2,7 @@ package org.example.room;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.*;
@@ -40,12 +41,13 @@ class RoomRepositoryImplementationTest {
   void ShouldCreateNewRoom() {
     RoomRepository repository = new RoomRepositoryImplementation(jdbi);
 
-    long orgId = repository.create("Room 1", "10:00:00", "22:00:00");
+    long orgId =
+        repository.create("Room 1", LocalTime.parse("10:00:00"), LocalTime.parse("22:00:00"));
 
     RoomRepository.RoomEntity room = repository.getById(orgId);
     assertEquals("Room 1", room.title());
-    assertEquals("10:00:00", room.startInterval());
-    assertEquals("22:00:00", room.endInterval());
+    assertEquals(LocalTime.parse("10:00:00"), room.startInterval());
+    assertEquals(LocalTime.parse("22:00:00"), room.endInterval());
     assertEquals(orgId, room.id());
   }
 
@@ -54,17 +56,19 @@ class RoomRepositoryImplementationTest {
   void shouldUpdateRoomById() {
     RoomRepository repository = new RoomRepositoryImplementation(jdbi);
 
-    long roomId = repository.create("RoomToUpdate", "08:00:00", "17:00:00");
+    long roomId =
+        repository.create("RoomToUpdate", LocalTime.parse("08:00:00"), LocalTime.parse("17:00:00"));
 
     assertNotNull(repository.getById(roomId));
 
-    repository.update(roomId, "UpdatedRoom", "07:00:00", "16:00:00");
+    repository.update(
+        roomId, "UpdatedRoom", LocalTime.parse("07:00:00"), LocalTime.parse("16:00:00"));
 
     RoomRepository.RoomEntity updatedRoom = repository.getById(roomId);
 
     assertEquals("UpdatedRoom", updatedRoom.title());
-    assertEquals("07:00:00", updatedRoom.startInterval());
-    assertEquals("16:00:00", updatedRoom.endInterval());
+    assertEquals(LocalTime.parse("07:00:00"), updatedRoom.startInterval());
+    assertEquals(LocalTime.parse("16:00:00"), updatedRoom.endInterval());
     assertEquals(roomId, updatedRoom.id());
   }
 
@@ -73,7 +77,8 @@ class RoomRepositoryImplementationTest {
   void shouldDeleteRoomById() {
     RoomRepository repository = new RoomRepositoryImplementation(jdbi);
 
-    long roomId = repository.create("RoomToDelete", "09:00:00", "18:00:00");
+    long roomId =
+        repository.create("RoomToDelete", LocalTime.parse("09:00:00"), LocalTime.parse("18:00:00"));
 
     assertNotNull(repository.getById(roomId));
 
@@ -92,7 +97,8 @@ class RoomRepositoryImplementationTest {
     var exception =
         assertThrows(
             RoomExceptions.RoomDatabaseException.class,
-            () -> repository.create(null, "08:00:00", "17:00:00"));
+            () ->
+                repository.create(null, LocalTime.parse("08:00:00"), LocalTime.parse("17:00:00")));
 
     assertEquals("Cannot create room", exception.getMessage());
   }
@@ -102,12 +108,15 @@ class RoomRepositoryImplementationTest {
   void shouldThrowExceptionWhenUpdatingRoomWithInvalidParameters() {
     RoomRepository repository = new RoomRepositoryImplementation(jdbi);
 
-    long roomId = repository.create("RoomToUpdate", "08:00:00", "17:00:00");
+    long roomId =
+        repository.create("RoomToUpdate", LocalTime.parse("08:00:00"), LocalTime.parse("17:00:00"));
 
     var exception =
         assertThrows(
             RoomExceptions.RoomDatabaseException.class,
-            () -> repository.update(roomId, null, "07:00:00", "16:00:00"));
+            () ->
+                repository.update(
+                    roomId, null, LocalTime.parse("07:00:00"), LocalTime.parse("16:00:00")));
 
     assertEquals("Cannot update room", exception.getMessage());
   }

@@ -30,8 +30,8 @@ public class RoomRepositoryImplementation implements RoomRepository {
             return new RoomEntity(
                 (Long) result.get("id"),
                 (String) result.get("title"),
-                result.get("start_interval".toLowerCase()).toString(),
-                result.get("end_interval".toLowerCase()).toString());
+                ((java.sql.Time) result.get("start_interval")).toLocalTime(),
+                ((java.sql.Time) result.get("end_interval")).toLocalTime());
           });
     } catch (Exception e) {
       throw new RoomExceptions.RoomDatabaseException("Cannot find room", e);
@@ -39,7 +39,7 @@ public class RoomRepositoryImplementation implements RoomRepository {
   }
 
   @Override
-  public long create(String title, String start, String end)
+  public long create(String title, LocalTime start, LocalTime end)
       throws RoomExceptions.RoomDatabaseException {
     try {
       return jdbi.inTransaction(
@@ -50,8 +50,8 @@ public class RoomRepositoryImplementation implements RoomRepository {
                         "INSERT INTO room (title, start_interval, end_interval) "
                             + "VALUES (:title, :start, :end)")
                     .bind("title", title)
-                    .bind("start", LocalTime.parse(start))
-                    .bind("end", LocalTime.parse(end))
+                    .bind("start", start)
+                    .bind("end", end)
                     .executeAndReturnGeneratedKeys("id");
             Map<String, Object> mapResult = resultBearing.mapToMap().first();
             return ((Long) mapResult.get("id"));
@@ -77,7 +77,7 @@ public class RoomRepositoryImplementation implements RoomRepository {
   }
 
   @Override
-  public void update(long id, String title, String start, String end)
+  public void update(long id, String title, LocalTime start, LocalTime end)
       throws RoomExceptions.RoomDatabaseException {
     try {
       var rowsAffected =
@@ -88,8 +88,8 @@ public class RoomRepositoryImplementation implements RoomRepository {
                         "UPDATE room SET title = :title, start_interval = :start, end_interval = :end WHERE id = :id ")
                     .bind("id", id)
                     .bind("title", title)
-                    .bind("start", LocalTime.parse(start))
-                    .bind("end", LocalTime.parse(end))
+                    .bind("start", start)
+                    .bind("end", end)
                     .execute();
               });
       if (rowsAffected == 0) {
