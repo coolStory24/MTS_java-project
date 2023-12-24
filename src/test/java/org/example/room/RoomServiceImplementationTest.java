@@ -24,7 +24,7 @@ class RoomServiceImplementationTest {
   private static Jdbi jdbi;
 
   @BeforeAll
-  static void beforeAll(){
+  static void beforeAll() {
     String postgresJdbcUrl = POSTGRES.getJdbcUrl();
     Flyway flyway =
             Flyway.configure()
@@ -33,12 +33,11 @@ class RoomServiceImplementationTest {
                     .dataSource(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword())
                     .load();
     flyway.migrate();
-    LOG.info("PostgreSQL has been successfully initialized: " + postgresJdbcUrl + ", " +POSTGRES.getUsername());
+    LOG.info("PostgreSQL has been successfully initialized: " + postgresJdbcUrl + ", " + POSTGRES.getUsername());
     jdbi = Jdbi.create(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword());
   }
 
   @BeforeEach
-
   void beforeEach() {
     jdbi.useTransaction(handle -> handle.createUpdate("DELETE FROM room").execute());
   }
@@ -94,7 +93,7 @@ class RoomServiceImplementationTest {
             "Room #1 (updated)",
             LocalTime.parse("07:00:00"),
             LocalTime.parse("19:00:00")
-            );
+    );
     RoomRepository.RoomEntity room = roomService.getRoomById(roomId);
 
     assertEquals("Room #1 (updated)", room.title());

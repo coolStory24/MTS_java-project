@@ -23,7 +23,7 @@ class UserServiceImplementationTest {
   private static Jdbi jdbi;
 
   @BeforeAll
-  static void beforeAll(){
+  static void beforeAll() {
     String postgresJdbcUrl = POSTGRES.getJdbcUrl();
     Flyway flyway =
             Flyway.configure()
@@ -32,12 +32,11 @@ class UserServiceImplementationTest {
                     .dataSource(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword())
                     .load();
     flyway.migrate();
-    LOG.info("PostgreSQL has been successfully initialized: " + postgresJdbcUrl + ", " +POSTGRES.getUsername());
+    LOG.info("PostgreSQL has been successfully initialized: " + postgresJdbcUrl + ", " + POSTGRES.getUsername());
     jdbi = Jdbi.create(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword());
   }
 
   @BeforeEach
-
   void beforeEach() {
     jdbi.useTransaction(handle -> handle.createUpdate("DELETE FROM \"user\"").execute());
   }
@@ -80,7 +79,7 @@ class UserServiceImplementationTest {
     long userId = userService.createUser("User to update");
     assertNotNull(userService.findUserById(userId));
 
-    userService.updateUser(userId,"Updated user");
+    userService.updateUser(userId, "Updated user");
     UserRepository.UserEntity updatedUser = userService.findUserById(userId);
 
     assertEquals("Updated user", updatedUser.name());
@@ -105,7 +104,7 @@ class UserServiceImplementationTest {
 
   @Test
   @DisplayName("UserServiceImplementationTest -- tests exception thrown by createUser functionality")
-  void shouldThrowExceptionWhenCreatingUserWithInvalidParameters(){
+  void shouldThrowExceptionWhenCreatingUserWithInvalidParameters() {
     UserRepository userRepository = new UserRepositoryImplementation(jdbi);
     UserServiceImplementation userService = new UserServiceImplementation(userRepository);
 
