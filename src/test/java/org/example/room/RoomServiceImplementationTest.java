@@ -95,7 +95,6 @@ class RoomServiceImplementationTest {
     assertEquals(LocalTime.parse("07:00:00"), room.startInterval());
     assertEquals(LocalTime.parse("19:00:00"), room.endInterval());
     assertEquals(roomId, room.id());
-
   }
 
   @Test
@@ -104,16 +103,14 @@ class RoomServiceImplementationTest {
     RoomRepository roomRepository = new RoomRepositoryImplementation(jdbi);
     RoomServiceImplementation roomService = new RoomServiceImplementation(roomRepository);
 
-    long roomId = roomService.createRoom(
-            "Room #1",
-            LocalTime.parse("10:00:00"),
-            LocalTime.parse("22:00:00"));
+    long roomId =
+        roomService.createRoom("Room #1", LocalTime.parse("10:00:00"), LocalTime.parse("22:00:00"));
     assertNotNull(roomService.getRoomById(roomId));
 
     roomService.deleteRoom(roomId);
 
-    var exception = assertThrows(
-            RoomExceptions.RoomNotFoundException.class,
-            () -> roomService.getRoomById(roomId));
+    var exception =
+        assertThrows(
+            RoomExceptions.RoomNotFoundException.class, () -> roomService.getRoomById(roomId));
   }
 }
