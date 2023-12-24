@@ -128,7 +128,8 @@ class UserServiceImplementationTest {
     long userId = userService.createUser("New user to update");
 
     UserExceptions.UserUpdateException exception =
-        assertThrows(UserExceptions.UserUpdateException.class, () -> userService.updateUser(userId, null));
+        assertThrows(
+            UserExceptions.UserUpdateException.class, () -> userService.updateUser(userId, null));
 
     assertEquals("Cannot update user", exception.getMessage());
   }
