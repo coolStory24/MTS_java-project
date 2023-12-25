@@ -122,6 +122,11 @@
             <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-template-freemarker</artifactId>
+            <version>2.7.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -180,6 +185,7 @@
                                 <exclude>**/*Main.*</exclude>
                                 <exclude>**/utils/*</exclude>
                                 <exclude>**/transaction/*</exclude>
+                                <exclude>**/template/*</exclude>
                             </excludes>
                             <rules>
                                 <rule>
