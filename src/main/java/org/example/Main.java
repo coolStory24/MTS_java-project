@@ -42,7 +42,6 @@ public class Main {
             config.getString("app.database.user"),
             config.getString("app.database.password"));
 
-
     Service service = Service.ignite();
 
     Application application = getApplication(jdbi, service);
