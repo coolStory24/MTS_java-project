@@ -7,9 +7,11 @@ import java.util.List;
 import org.example.reservation.ReservationRepositoryImplementation;
 import org.example.reservation.ReservationServiceImplementation;
 import org.example.reservation.controller.ReservationController;
+import org.example.reservation.controller.ReservationTemplateController;
 import org.example.room.RoomRepositoryImplementation;
 import org.example.room.RoomServiceImplementation;
 import org.example.room.controller.RoomController;
+import org.example.template.TemplateFactory;
 import org.example.transaction.JdbiTransactionManager;
 import org.example.transaction.TransactionManager;
 import org.example.user.UserRepositoryImplementation;
@@ -39,7 +41,7 @@ public class Main {
             config.getString("app.database.url"),
             config.getString("app.database.user"),
             config.getString("app.database.password"));
-    TransactionManager transactionManager = new JdbiTransactionManager(jdbi);
+
 
     Service service = Service.ignite();
 
@@ -49,13 +51,15 @@ public class Main {
   }
 
   private static Application getApplication(Jdbi jdbi, Service service) {
+    TransactionManager transactionManager = new JdbiTransactionManager(jdbi);
+
     var userService = new UserServiceImplementation(new UserRepositoryImplementation(jdbi));
     var roomService = new RoomServiceImplementation(new RoomRepositoryImplementation(jdbi));
     var reservationService =
         new ReservationServiceImplementation(
             new ReservationRepositoryImplementation(jdbi),
             new RoomRepositoryImplementation(jdbi),
-            new JdbiTransactionManager(jdbi));
+            transactionManager);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -63,6 +67,8 @@ public class Main {
         List.of(
             new RoomController(service, objectMapper, roomService),
             new UserController(service, objectMapper, userService),
-            new ReservationController(service, objectMapper, reservationService)));
+            new ReservationController(service, objectMapper, reservationService),
+            new ReservationTemplateController(
+                service, reservationService, TemplateFactory.freeMarkerEngine())));
   }
 }
